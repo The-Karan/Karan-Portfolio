@@ -53,3 +53,4 @@ npm run preview
 5. Add the EmailJS environment variables if the contact form should work in production.
 
 After deployment, update `public/robots.txt` with the live sitemap URL if you add a sitemap later.
+# Karan-Portfolio
