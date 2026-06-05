@@ -1,8 +1,9 @@
 {
-  "name": "Karan Portfolio",
-  "short_name": "Karan",
-  "description": "Software developer portfolio and resume for Karan.",
+  "name": "Karan Sharma Portfolio",
+  "short_name": "Karan Sharma",
+  "description": "Software developer portfolio and resume for Karan Sharma.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#050816",
   "theme_color": "#050816",

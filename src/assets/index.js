@@ -38,16 +38,6 @@ import wordpress from "./tech/Wordpress.png";
 import xytingway from "./company/xytingway.png";
 import sortiq from "./company/SortiqSolutions.png";
 
-import restaurant from "./projects/restaurant.png";
-import clubevent from "./projects/clubevent.png";
-import cms from "./projects/cms.png";
-import cricket from "./projects/cricket.png";
-import pythonwallah from "./projects/pythonwallah.png";
-import sortiqProject from "./projects/sortiq.png";
-import talentsphere from "./projects/talentsphere.png";
-import osteo from "./projects/Osteo.png";
-import peckfamily from "./projects/Peckfamily.png";
-
 export {
   logo,
   backend,
@@ -88,14 +78,4 @@ export {
   socialGmail,
   socialWhatsapp,
   socialLeetcode,
-
-  restaurant,
-  clubevent,
-  cms,
-  cricket,
-  pythonwallah,
-  sortiqProject,
-  talentsphere,
-  osteo,
-  peckfamily,
 };

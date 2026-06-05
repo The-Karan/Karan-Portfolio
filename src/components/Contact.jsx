@@ -1,11 +1,13 @@
-import React, { useRef, useState } from "react";
+import React, { lazy, Suspense, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 
 import { styles } from "../styles";
-import { EarthCanvas } from "./canvas";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
+import { useInViewport } from "../hooks/useInViewport";
+
+const EarthCanvas = lazy(() => import("./canvas/Earth"));
 
 const NAME_PATTERN = /^[A-Za-z][A-Za-z .'-]{1,79}$/;
 const EMAIL_PATTERN =
@@ -38,8 +40,23 @@ const getContactValidationError = ({ name, email, message }) => {
   return "";
 };
 
-const Contact = () => {
+const ContactVisualFallback = () => (
+  <div
+    className='relative flex h-full min-h-[350px] items-center justify-center overflow-hidden rounded-3xl bg-black-100'
+    aria-hidden='true'
+  >
+    <div className='absolute h-[78%] w-[78%] rounded-full bg-[radial-gradient(circle_at_34%_28%,rgba(255,255,255,0.28),rgba(0,206,168,0.2)_24%,rgba(5,8,22,0.1)_38%,rgba(191,97,255,0.22)_62%,rgba(5,8,22,0.9)_78%)] shadow-[inset_-36px_-38px_70px_rgba(0,0,0,0.55),0_28px_90px_rgba(0,206,168,0.18)]' />
+    <div className='absolute h-[86%] w-[86%] rounded-full border border-white/10' />
+    <div className='absolute h-[58%] w-[58%] rounded-full border border-[#00cea8]/20' />
+    <div className='absolute bottom-8 left-1/2 h-10 w-[60%] -translate-x-1/2 rounded-full bg-[#00cea8]/12 blur-xl' />
+  </div>
+);
+
+const Contact = ({ enable3D = false }) => {
   const formRef = useRef();
+  const visualRef = useRef(null);
+  const isVisualInViewport = useInViewport(visualRef, "300px");
+  const showEarth = enable3D && isVisualInViewport;
   const emailJsServiceId = import.meta.env.VITE_APP_EMAILJS_SERVICE_ID;
   const emailJsTemplateId = import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID;
   const emailJsPublicKey = import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY;
@@ -217,10 +234,17 @@ const Contact = () => {
       </motion.div>
 
       <motion.div
+        ref={visualRef}
         variants={slideIn("right", "tween", 0.2, 1)}
         className='xl:flex-1 xl:h-auto md:h-[550px] h-[350px]'
       >
-        <EarthCanvas />
+        {showEarth ? (
+          <Suspense fallback={<ContactVisualFallback />}>
+            <EarthCanvas />
+          </Suspense>
+        ) : (
+          <ContactVisualFallback />
+        )}
       </motion.div>
     </div>
   );

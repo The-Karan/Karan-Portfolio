@@ -3,6 +3,11 @@ import React, { useEffect, useState } from "react";
 import { styles } from "../styles";
 import { navLinks } from "../constants";
 import { logo, menu, close } from "../assets";
+import {
+  getSectionIdFromPath,
+  getSectionPath,
+  navigateToSection,
+} from "../utils/navigation";
 
 const Navbar = () => {
   const [active, setActive] = useState("");
@@ -24,6 +29,32 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const syncActiveSection = () => {
+      const activeSectionId = getSectionIdFromPath(window.location.pathname);
+      const activeNav = navLinks.find((nav) => nav.id === activeSectionId);
+
+      setActive(activeNav?.title || "");
+    };
+
+    syncActiveSection();
+    window.addEventListener("popstate", syncActiveSection);
+
+    return () => window.removeEventListener("popstate", syncActiveSection);
+  }, []);
+
+  const handleHomeClick = (event) => {
+    event.preventDefault();
+    setActive("");
+    navigateToSection("");
+  };
+
+  const handleSectionClick = (event, nav) => {
+    event.preventDefault();
+    setActive(nav.title);
+    navigateToSection(nav.id);
+  };
+
   return (
     <nav
       className={`${
@@ -33,21 +64,18 @@ const Navbar = () => {
       }`}
     >
       <div className='w-full flex justify-between items-center max-w-7xl mx-auto'>
-        <button
-          type='button'
+        <a
+          href='/'
           className='flex items-center gap-2 border-none bg-transparent'
-          onClick={() => {
-            setActive("");
-            window.scrollTo(0, 0);
-          }}
-          aria-label='Go to top of portfolio'
+          onClick={handleHomeClick}
+          aria-label='Go to Karan Sharma portfolio homepage'
         >
-          <img src={logo} alt='Karan logo' className='w-9 h-9 object-contain' />
+          <img src={logo} alt='Karan Sharma logo' className='w-9 h-9 object-contain' />
           <p className='text-white text-[18px] font-bold cursor-pointer flex '>
-            Karan &nbsp;
+            Karan Sharma &nbsp;
             <span className='sm:block hidden'> | Software Developer</span>
           </p>
-        </button>
+        </a>
 
         <ul className='list-none hidden lg:flex flex-row gap-10'>
           {navLinks.map((nav) => (
@@ -56,9 +84,13 @@ const Navbar = () => {
               className={`${
                 active === nav.title ? "text-white" : "text-secondary"
               } hover:text-white text-[18px] font-medium cursor-pointer`}
-              onClick={() => setActive(nav.title)}
             >
-              <a href={`#${nav.id}`}>{nav.title}</a>
+              <a
+                href={getSectionPath(nav.id)}
+                onClick={(event) => handleSectionClick(event, nav)}
+              >
+                {nav.title}
+              </a>
             </li>
           ))}
         </ul>
@@ -101,7 +133,8 @@ const Navbar = () => {
                   }}
                 >
                   <a
-                    href={`#${nav.id}`}
+                    href={getSectionPath(nav.id)}
+                    onClick={(event) => handleSectionClick(event, nav)}
                     className={`flex items-center justify-center rounded-xl px-4 py-3 text-center text-[15px] font-medium transition-colors duration-200 ${
                       active === nav.title
                         ? "bg-white/10 text-white"

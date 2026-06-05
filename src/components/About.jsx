@@ -56,8 +56,11 @@ const ProfilePhoto = () => (
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(0,206,168,0.24),transparent_34%),radial-gradient(circle_at_80%_0%,rgba(191,97,255,0.24),transparent_30%),#151030]' />
         <img
           src={profileImage}
-          alt='Karan software developer profile'
+          alt='Karan Sharma software developer profile'
           loading='lazy'
+          decoding='async'
+          width='900'
+          height='1200'
           className='absolute inset-0 z-10 h-full w-full object-cover object-[62%_center]'
           onError={(event) => {
             event.currentTarget.style.display = "none";
@@ -67,7 +70,7 @@ const ProfilePhoto = () => (
         <div className='absolute inset-0 z-30 flex items-end p-7'>
           <div>
             <h3 className='mt-2 text-[28px] font-bold text-white sm:text-[34px]'>
-              Karan
+              Karan Sharma
             </h3>
             <p className='text-[13px] uppercase tracking-[0.2em] text-secondary'>
               Software Developer
