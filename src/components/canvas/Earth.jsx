@@ -16,7 +16,7 @@ const EarthCanvas = () => {
   return (
     <Canvas
       frameloop='always'
-      dpr={[0.75, 1.25]}
+      dpr={[1, 1.5]}
       gl={{ antialias: false, powerPreference: "low-power" }}
       camera={{
         fov: 45,

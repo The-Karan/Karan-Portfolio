@@ -7,7 +7,7 @@ const TechCanvas = ({ eventSource }) => {
     <Canvas
       camera={{ position: [0, 0, 7.5], fov: 45 }}
       className='pointer-events-none !fixed inset-0 !z-10'
-      dpr={[0.75, 1.25]}
+      dpr={[1, 1.5]}
       eventPrefix='client'
       eventSource={eventSource}
       frameloop='always'

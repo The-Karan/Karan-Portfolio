@@ -121,7 +121,7 @@ const AdaptiveOrbitControls = () => {
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const dpr = isMobile ? [0.75, 1] : [1, 1.35];
+  const dpr = isMobile ? [1, 1.5] : [1, 1.5];
 
   useEffect(() => {
     // Add a listener for changes to the screen size
