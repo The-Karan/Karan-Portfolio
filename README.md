@@ -1,4 +1,4 @@
-```md
+
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&height=250&color=8B5CF6&text=Karan%20Portfolio&fontColor=ffffff&fontSize=55&animation=fadeIn" />
 </p>
@@ -113,4 +113,3 @@ Built using modern web technologies with a strong focus on performance, responsi
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&height=150&section=footer&color=8B5CF6" />
 </p>
-```
