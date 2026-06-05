@@ -68,11 +68,11 @@ const Navbar = () => {
           href='/'
           className='flex items-center gap-2 border-none bg-transparent'
           onClick={handleHomeClick}
-          aria-label='Go to Karan Sharma portfolio homepage'
+          aria-label='Go to Karan portfolio homepage'
         >
-          <img src={logo} alt='Karan Sharma logo' className='w-9 h-9 object-contain' />
+          <img src={logo} alt='Karan logo' className='w-9 h-9 object-contain' />
           <p className='text-white text-[18px] font-bold cursor-pointer flex '>
-            Karan Sharma &nbsp;
+            Karan &nbsp;
             <span className='sm:block hidden'> | Software Developer</span>
           </p>
         </a>

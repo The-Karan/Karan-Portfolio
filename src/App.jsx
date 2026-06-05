@@ -19,7 +19,7 @@ const TechCanvas = lazy(() => import("./components/canvas/TechCanvas"));
 
 const App = () => {
   const appRef = useRef(null);
-  const enhancedVisuals = useEnhancedVisuals({ minWidth: 960 });
+  const enhancedVisuals = useEnhancedVisuals({ minWidth: 768 });
 
   useEffect(() => {
     const handleRouteChange = () => {
