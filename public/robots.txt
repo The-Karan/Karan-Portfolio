@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# After deployment, add your production sitemap URL here.
+# Sitemap: https://your-domain.com/sitemap.xml

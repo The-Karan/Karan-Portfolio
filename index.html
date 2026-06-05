@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" href="/logo.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050816" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      name="description"
+      content="Portfolio and resume of Karan, a software developer specializing in React, frontend engineering, CMS development, Java, Python, SQL, and modern web apps."
+    />
+    <meta name="author" content="Karan" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta
+      name="googlebot"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="format-detection" content="telephone=no" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:site_name" content="Karan Portfolio" />
+    <meta property="og:url" content="/" />
+    <meta
+      property="og:title"
+      content="Karan | Software Developer Portfolio"
+    />
+    <meta
+      property="og:description"
+      content="Explore Karan's portfolio, resume, web projects, CMS work, frontend development experience, certifications, and contact links."
+    />
+    <meta property="og:image" content="/karan-og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Karan software developer profile photo"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Karan | Software Developer Portfolio"
+    />
+    <meta
+      name="twitter:description"
+      content="Software developer portfolio and resume featuring React, CMS, frontend, Java, Python, SQL, and real-world web projects."
+    />
+    <meta name="twitter:image" content="/karan-og.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="Karan software developer profile photo"
+    />
+
+    <title>Karan | Software Developer Portfolio, Resume & CV</title>
+
+    <script>
+      (() => {
+        const normalizeUrl = (url) => url.replace(/\/(?:index\.html)?$/, "/");
+        const pageUrl = normalizeUrl(window.location.href.split("#")[0]);
+        const assetUrl = (path) => new URL(path, pageUrl).href;
+        const description =
+          "Portfolio and resume of Karan, a software developer specializing in React, frontend engineering, CMS development, Java, Python, SQL, and modern web apps.";
+
+        const setMeta = (selector, value) => {
+          const tag = document.querySelector(selector);
+          if (tag) {
+            tag.setAttribute("content", value);
+          }
+        };
+
+        const canonical = document.createElement("link");
+        canonical.setAttribute("rel", "canonical");
+        canonical.setAttribute("href", pageUrl);
+        document.head.appendChild(canonical);
+
+        setMeta('meta[property="og:url"]', pageUrl);
+        setMeta('meta[property="og:image"]', assetUrl("/karan-og.jpg"));
+        setMeta('meta[name="twitter:image"]', assetUrl("/karan-og.jpg"));
+
+        const profileId = `${pageUrl}#person`;
+        const structuredData = {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "@id": `${pageUrl}#website`,
+              "url": pageUrl,
+              "name": "Karan Portfolio",
+              "alternateName": ["Karan Portfolio", "Karan Resume", "Karan CV"],
+              "description": description,
+              "inLanguage": "en-IN",
+              "publisher": { "@id": profileId }
+            },
+            {
+              "@type": "ProfilePage",
+              "@id": `${pageUrl}#profile`,
+              "url": pageUrl,
+              "name": "Karan - Software Developer Portfolio and Resume",
+              "description": description,
+              "inLanguage": "en-IN",
+              "about": { "@id": profileId },
+              "mainEntity": { "@id": profileId },
+              "primaryImageOfPage": {
+                "@type": "ImageObject",
+                "url": assetUrl("/karan-og.jpg"),
+                "caption": "Karan"
+              }
+            },
+            {
+              "@type": "Person",
+              "@id": profileId,
+              "name": "Karan",
+              "givenName": "Karan",
+              "url": pageUrl,
+              "image": assetUrl("/karan-profile.jpg"),
+              "jobTitle": ["Software Developer", "Frontend Developer", "CMS Developer"],
+              "description": description,
+              "email": "mailto:KaranSharma.ab9904@gmail.com",
+              "worksFor": {
+                "@type": "Organization",
+                "name": "Sortiq Solutions Pvt Ltd"
+              },
+              "knowsAbout": [
+                "React.js",
+                "Frontend Development",
+                "CMS Development",
+                "Wix Studio",
+                "WordPress",
+                "JavaScript",
+                "Java",
+                "Python",
+                "SQL",
+                "MongoDB",
+                "MySQL",
+                "Tailwind CSS",
+                "UI/UX Design",
+                "SEO and Content Management"
+              ],
+              "sameAs": [
+                "https://github.com/The-Karan",
+                "https://www.linkedin.com/in/karan9904/",
+                "https://leetcode.com/u/The_karan_sharma/",
+                "https://www.instagram.com/the_karan__sharma/"
+              ]
+            },
+            {
+              "@type": "ItemList",
+              "@id": `${pageUrl}#featured-projects`,
+              "name": "Featured software and web development projects by Karan",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "item": {
+                    "@type": "CreativeWork",
+                    "name": "Talent Sphere",
+                    "url": "https://talent-sphere-xi.vercel.app/",
+                    "sameAs": "https://github.com/The-Karan/Talent-Sphere",
+                    "description": "Career development platform with job opportunities, skill assessments, interview preparation, and interactive learning resources.",
+                    "creator": { "@id": profileId }
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "item": {
+                    "@type": "CreativeWork",
+                    "name": "Sortiq Solutions Website",
+                    "url": "https://karansortiqsolutio9.wixstudio.com/my-site-1",
+                    "sameAs": "https://github.com/The-Karan/Sortiq-Solutions",
+                    "description": "Responsive company website for business services, brand visibility, performance, and seamless navigation.",
+                    "creator": { "@id": profileId }
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "item": {
+                    "@type": "CreativeWork",
+                    "name": "Osteo Lab",
+                    "url": "https://www.osteolab.co.uk/",
+                    "description": "Healthcare website for an osteopathy clinic with treatment information, appointment booking, and patient guidance.",
+                    "creator": { "@id": profileId }
+                  }
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 4,
+                  "item": {
+                    "@type": "CreativeWork",
+                    "name": "College Management System",
+                    "url": "https://college-management-system-tan.vercel.app/",
+                    "sameAs": "https://github.com/The-Karan/College-Management-System",
+                    "description": "College management platform for attendance, student records, fees, examinations, and results.",
+                    "creator": { "@id": profileId }
+                  }
+                }
+              ]
+            }
+          ]
+        };
+
+        const script = document.createElement("script");
+        script.type = "application/ld+json";
+        script.text = JSON.stringify(structuredData);
+        document.head.appendChild(script);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

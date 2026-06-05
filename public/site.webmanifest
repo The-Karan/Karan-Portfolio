@@ -1,0 +1,17 @@
+{
+  "name": "Karan Portfolio",
+  "short_name": "Karan",
+  "description": "Software developer portfolio and resume for Karan.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050816",
+  "theme_color": "#050816",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "1024x1024",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
