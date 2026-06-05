@@ -7,6 +7,37 @@ import { EarthCanvas } from "./canvas";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
 
+const NAME_PATTERN = /^[A-Za-z][A-Za-z .'-]{1,79}$/;
+const EMAIL_PATTERN =
+  /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
+
+const isValidEmail = (email) => {
+  const [localPart, domain] = email.split("@");
+
+  return (
+    EMAIL_PATTERN.test(email) &&
+    !email.includes("..") &&
+    localPart?.length <= 64 &&
+    domain?.length <= 253
+  );
+};
+
+const getContactValidationError = ({ name, email, message }) => {
+  if (!name || !email || !message) {
+    return "Please fill in all contact form fields before sending.";
+  }
+
+  if (!NAME_PATTERN.test(name)) {
+    return "Please enter a real name using letters, spaces, hyphens, apostrophes, or periods.";
+  }
+
+  if (!isValidEmail(email)) {
+    return "Please enter a valid email address. Gmail, Outlook, and company domain emails are all accepted.";
+  }
+
+  return "";
+};
+
 const Contact = () => {
   const formRef = useRef();
   const emailJsServiceId = import.meta.env.VITE_APP_EMAILJS_SERVICE_ID;
@@ -21,6 +52,7 @@ const Contact = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [website, setWebsite] = useState("");
 
   const handleChange = (e) => {
     const { target } = e;
@@ -34,6 +66,23 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const trimmedForm = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      message: form.message.trim(),
+    };
+
+    if (website.trim()) {
+      return;
+    }
+
+    const validationError = getContactValidationError(trimmedForm);
+
+    if (validationError) {
+      alert(validationError);
+      return;
+    }
 
     if (
       !emailJsServiceId ||
@@ -53,12 +102,12 @@ const Contact = () => {
         emailJsServiceId,
         emailJsTemplateId,
         {
-          from_name: form.name,
+          from_name: trimmedForm.name,
           to_name: "Karan",
-          from_email: form.email,
+          from_email: trimmedForm.email,
           to_email: emailJsToEmail,
-          reply_to: form.email,
-          message: form.message,
+          reply_to: trimmedForm.email,
+          message: trimmedForm.message,
         },
         emailJsPublicKey
       )
@@ -100,6 +149,16 @@ const Contact = () => {
           onSubmit={handleSubmit}
           className='mt-12 flex flex-col gap-8'
         >
+          <input
+            type='text'
+            name='website'
+            value={website}
+            onChange={(event) => setWebsite(event.target.value)}
+            className='hidden'
+            tabIndex='-1'
+            autoComplete='off'
+            aria-hidden='true'
+          />
           <label className='flex flex-col'>
             <span className='text-white font-medium mb-4'>Your Name</span>
             <input
@@ -108,6 +167,11 @@ const Contact = () => {
               value={form.name}
               onChange={handleChange}
               placeholder="What's your good name?"
+              required
+              aria-required='true'
+              minLength={2}
+              maxLength={80}
+              autoComplete='name'
               className='bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium'
             />
           </label>
@@ -119,6 +183,11 @@ const Contact = () => {
               value={form.email}
               onChange={handleChange}
               placeholder="What's your web address?"
+              required
+              aria-required='true'
+              maxLength={254}
+              inputMode='email'
+              autoComplete='email'
               className='bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium'
             />
           </label>
@@ -130,12 +199,16 @@ const Contact = () => {
               value={form.message}
               onChange={handleChange}
               placeholder='What you want to say?'
+              required
+              aria-required='true'
+              maxLength={2000}
               className='bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium'
             />
           </label>
 
           <button
             type='submit'
+            disabled={loading}
             className='bg-tertiary py-3 px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-primary'
           >
             {loading ? "Sending..." : "Send"}
