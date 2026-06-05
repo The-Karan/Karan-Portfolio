@@ -6,6 +6,7 @@ import CanvasLoader from "../Loader";
 
 const NORMAL_ROTATE_SPEED = -1.5;
 const BACK_ROTATE_SPEED = -4.2;
+const RESUME_AUTO_ROTATE_DELAY = 1600;
 
 const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
 const smoothStep = (value) => value * value * (3 - 2 * value);
@@ -36,10 +37,55 @@ const Computers = ({ isMobile }) => {
 const AdaptiveOrbitControls = () => {
   const controlsRef = useRef(null);
   const frontAngleRef = useRef(null);
+  const resumeTimerRef = useRef(null);
+
+  useEffect(() => {
+    const applyTouchBehavior = () => {
+      const domElement = controlsRef.current?.domElement;
+
+      if (domElement) {
+        domElement.style.touchAction = "pan-y";
+      }
+    };
+
+    applyTouchBehavior();
+    const frameId = window.requestAnimationFrame(applyTouchBehavior);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+
+      if (resumeTimerRef.current) {
+        window.clearTimeout(resumeTimerRef.current);
+      }
+    };
+  }, []);
+
+  const pauseAutoRotate = () => {
+    if (resumeTimerRef.current) {
+      window.clearTimeout(resumeTimerRef.current);
+    }
+
+    if (controlsRef.current) {
+      controlsRef.current.autoRotate = false;
+    }
+  };
+
+  const resumeAutoRotate = () => {
+    if (resumeTimerRef.current) {
+      window.clearTimeout(resumeTimerRef.current);
+    }
+
+    resumeTimerRef.current = window.setTimeout(() => {
+      if (controlsRef.current) {
+        controlsRef.current.autoRotate = true;
+      }
+    }, RESUME_AUTO_ROTATE_DELAY);
+  };
 
   useFrame(() => {
     const controls = controlsRef.current;
     if (!controls) return;
+    if (!controls.autoRotate) return;
 
     const currentAngle = controls.getAzimuthalAngle();
     if (frontAngleRef.current === null) {
@@ -60,15 +106,22 @@ const AdaptiveOrbitControls = () => {
       ref={controlsRef}
       autoRotate
       autoRotateSpeed={NORMAL_ROTATE_SPEED}
+      enablePan={false}
+      enableRotate
       enableZoom={false}
+      makeDefault
       maxPolarAngle={Math.PI / 2}
       minPolarAngle={Math.PI / 2}
+      onEnd={resumeAutoRotate}
+      onStart={pauseAutoRotate}
+      rotateSpeed={0.85}
     />
   );
 };
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const dpr = isMobile ? [0.75, 1] : [1, 1.35];
 
   useEffect(() => {
     // Add a listener for changes to the screen size
@@ -93,8 +146,11 @@ const ComputersCanvas = () => {
 
   return (
     <Canvas
+      className='cursor-grab touch-pan-y active:cursor-grabbing'
+      id='hero-computer-canvas'
+      style={{ touchAction: "pan-y" }}
       frameloop='always'
-      dpr={[1, 1.5]}
+      dpr={dpr}
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ antialias: false, powerPreference: "low-power" }}
     >

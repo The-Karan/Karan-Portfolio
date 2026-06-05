@@ -5,6 +5,7 @@ import { technologies } from "../constants";
 import { useInViewport } from "../hooks/useInViewport";
 
 const Tech3DGrid = lazy(() => import("./Tech3DGrid"));
+const TechCanvas = lazy(() => import("./canvas/TechCanvas"));
 
 const TechBadgeGrid = () => (
   <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6'>
@@ -31,7 +32,7 @@ const TechBadgeGrid = () => (
   </div>
 );
 
-const Tech = ({ enable3D = false }) => {
+const Tech = ({ enable3D = false, eventSource }) => {
   const sectionRef = useRef(null);
   const isInViewport = useInViewport(sectionRef, "300px");
   const show3D = enable3D && isInViewport;
@@ -39,9 +40,14 @@ const Tech = ({ enable3D = false }) => {
   return (
     <div ref={sectionRef}>
       {show3D ? (
-        <Suspense fallback={<TechBadgeGrid />}>
-          <Tech3DGrid />
-        </Suspense>
+        <>
+          <Suspense fallback={<TechBadgeGrid />}>
+            <Tech3DGrid />
+          </Suspense>
+          <Suspense fallback={null}>
+            <TechCanvas eventSource={eventSource} />
+          </Suspense>
+        </>
       ) : (
         <TechBadgeGrid />
       )}

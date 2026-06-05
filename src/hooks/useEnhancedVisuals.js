@@ -26,7 +26,11 @@ const canRunEnhancedVisuals = (minWidth) =>
   !hasConstrainedConnection() &&
   supportsWebGL();
 
-export const useEnhancedVisuals = ({ minWidth = 900 } = {}) => {
+export const useEnhancedVisuals = ({
+  minWidth = 0,
+  desktopIdleTimeout = 1800,
+  mobileIdleTimeout = 6000,
+} = {}) => {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
@@ -34,16 +38,50 @@ export const useEnhancedVisuals = ({ minWidth = 900 } = {}) => {
       return undefined;
     }
 
-    const enable = () => setEnabled(true);
-    const scheduleIdleEnable = () => {
-      if ("requestIdleCallback" in window) {
-        return window.requestIdleCallback(enable, { timeout: 2400 });
+    let timeoutId;
+    let idleId;
+
+    const clearScheduledEnable = () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
       }
 
-      return window.setTimeout(enable, 1800);
+      if (idleId && "cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleId);
+      }
     };
 
-    const idleId = scheduleIdleEnable();
+    const enable = () => {
+      clearScheduledEnable();
+      setEnabled(true);
+    };
+
+    const scheduleIdleEnable = () => {
+      if (window.innerWidth < 768) {
+        timeoutId = window.setTimeout(() => {
+          if ("requestIdleCallback" in window) {
+            idleId = window.requestIdleCallback(enable, {
+              timeout: desktopIdleTimeout,
+            });
+            return;
+          }
+
+          enable();
+        }, mobileIdleTimeout);
+        return;
+      }
+
+      if ("requestIdleCallback" in window) {
+        idleId = window.requestIdleCallback(enable, {
+          timeout: desktopIdleTimeout,
+        });
+        return;
+      }
+
+      timeoutId = window.setTimeout(enable, desktopIdleTimeout);
+    };
+
+    scheduleIdleEnable();
 
     interactionEvents.forEach((eventName) => {
       window.addEventListener(eventName, enable, {
@@ -53,17 +91,13 @@ export const useEnhancedVisuals = ({ minWidth = 900 } = {}) => {
     });
 
     return () => {
-      if ("cancelIdleCallback" in window) {
-        window.cancelIdleCallback(idleId);
-      } else {
-        window.clearTimeout(idleId);
-      }
+      clearScheduledEnable();
 
       interactionEvents.forEach((eventName) => {
         window.removeEventListener(eventName, enable);
       });
     };
-  }, [minWidth]);
+  }, [desktopIdleTimeout, minWidth, mobileIdleTimeout]);
 
   return enabled;
 };

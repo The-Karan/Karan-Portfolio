@@ -1,6 +1,5 @@
 import React, { lazy, Suspense, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import emailjs from "@emailjs/browser";
 
 import { styles } from "../styles";
 import { SectionWrapper } from "../hoc";
@@ -81,7 +80,7 @@ const Contact = ({ enable3D = false }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const trimmedForm = {
@@ -114,8 +113,10 @@ const Contact = ({ enable3D = false }) => {
 
     setLoading(true);
 
-    emailjs
-      .send(
+    try {
+      const { default: emailjs } = await import("@emailjs/browser");
+
+      await emailjs.send(
         emailJsServiceId,
         emailJsTemplateId,
         {
@@ -127,27 +128,24 @@ const Contact = ({ enable3D = false }) => {
           message: trimmedForm.message,
         },
         emailJsPublicKey
-      )
-      .then(
-        () => {
-          setLoading(false);
-          alert("Thank you. I will get back to you as soon as possible.");
-
-          setForm({
-            name: "",
-            email: "",
-            message: "",
-          });
-        },
-        (error) => {
-          setLoading(false);
-          console.error(error);
-
-          alert(
-            `EmailJS error: ${error?.text || error?.message || "Please try again."}`
-          );
-        }
       );
+
+      alert("Thank you. I will get back to you as soon as possible.");
+
+      setForm({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        `EmailJS error: ${error?.text || error?.message || "Please try again."}`
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

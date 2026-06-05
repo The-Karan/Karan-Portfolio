@@ -12,14 +12,16 @@ import {
   Works,
 } from "./components";
 import { useEnhancedVisuals } from "./hooks/useEnhancedVisuals";
+import { useInViewport } from "./hooks/useInViewport";
 import { getSectionIdFromPath, scrollToSection } from "./utils/navigation";
 
 const StarsCanvas = lazy(() => import("./components/canvas/Stars"));
-const TechCanvas = lazy(() => import("./components/canvas/TechCanvas"));
 
 const App = () => {
   const appRef = useRef(null);
-  const enhancedVisuals = useEnhancedVisuals({ minWidth: 768 });
+  const contactRegionRef = useRef(null);
+  const enhancedVisuals = useEnhancedVisuals({ minWidth: 0 });
+  const showContactStars = useInViewport(contactRegionRef, "500px");
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -45,12 +47,12 @@ const App = () => {
         </div>
         <About />
         <Experience />
-        <Tech enable3D={enhancedVisuals} />
+        <Tech enable3D={enhancedVisuals} eventSource={appRef} />
         <Works />
         <Feedbacks />
-        <div className='relative z-0'>
+        <div className='relative z-0' ref={contactRegionRef}>
           <Contact enable3D={enhancedVisuals} />
-          {enhancedVisuals && (
+          {enhancedVisuals && showContactStars && (
             <Suspense fallback={null}>
               <StarsCanvas />
             </Suspense>
@@ -58,11 +60,6 @@ const App = () => {
         </div>
       </main>
       <Footer />
-      {enhancedVisuals && (
-        <Suspense fallback={null}>
-          <TechCanvas eventSource={appRef} />
-        </Suspense>
-      )}
     </div>
   );
 }
