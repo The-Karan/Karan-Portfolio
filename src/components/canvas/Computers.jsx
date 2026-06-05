@@ -1,8 +1,14 @@
-import React, { Suspense, useEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import React, { Suspense, useEffect, useRef, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
 
 import CanvasLoader from "../Loader";
+
+const NORMAL_ROTATE_SPEED = -1.5;
+const BACK_ROTATE_SPEED = -4.2;
+
+const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
+const smoothStep = (value) => value * value * (3 - 2 * value);
 
 const Computers = ({ isMobile }) => {
   const computer = useGLTF("./desktop_pc/scene.gltf");
@@ -26,6 +32,40 @@ const Computers = ({ isMobile }) => {
         rotation={[-0.01, -0.2, -0.1]}
       />
     </mesh>
+  );
+};
+
+const AdaptiveOrbitControls = () => {
+  const controlsRef = useRef(null);
+  const frontAngleRef = useRef(null);
+
+  useFrame(() => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+
+    const currentAngle = controls.getAzimuthalAngle();
+    if (frontAngleRef.current === null) {
+      frontAngleRef.current = currentAngle;
+    }
+
+    const frontDistance = Math.abs(wrapAngle(currentAngle - frontAngleRef.current));
+    const backBlend = smoothStep(Math.min(frontDistance / Math.PI, 1));
+    const targetSpeed =
+      NORMAL_ROTATE_SPEED +
+      (BACK_ROTATE_SPEED - NORMAL_ROTATE_SPEED) * backBlend;
+
+    controls.autoRotateSpeed += (targetSpeed - controls.autoRotateSpeed) * 0.08;
+  });
+
+  return (
+    <OrbitControls
+      ref={controlsRef}
+      autoRotate
+      autoRotateSpeed={NORMAL_ROTATE_SPEED}
+      enableZoom={false}
+      maxPolarAngle={Math.PI / 2}
+      minPolarAngle={Math.PI / 2}
+    />
   );
 };
 
@@ -55,20 +95,14 @@ const ComputersCanvas = () => {
 
   return (
     <Canvas
-      frameloop={isMobile ? "demand" : "always"}
+      frameloop='always'
       shadows
       dpr={[1, 2]}
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ preserveDrawingBuffer: true }}
     >
       <Suspense fallback={<CanvasLoader />}>
-        <OrbitControls
-          autoRotate={!isMobile}
-          autoRotateSpeed={-1.5}
-          enableZoom={false}
-          maxPolarAngle={Math.PI / 2}
-          minPolarAngle={Math.PI / 2}
-        />
+        <AdaptiveOrbitControls />
         <Computers isMobile={isMobile} />
       </Suspense>
 

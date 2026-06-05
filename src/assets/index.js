@@ -8,7 +8,6 @@ import menu from "./menu.svg";
 import close from "./close.svg";
 
 import certificate from "./Certification.png";
-import karanResume from "./Karan_Resume.pdf";
 
 import socialGithub from "./Socials/github.png";
 import socialLinkedin from "./Socials/linkedin.png";
@@ -60,7 +59,6 @@ export {
   close,
 
   certificate,
-  karanResume,
 
   c,
   cpp,

@@ -64,31 +64,52 @@ const Navbar = () => {
         </ul>
 
         <div className='lg:hidden flex flex-1 justify-end items-center'>
-          <img
-            src={toggle ? close : menu}
-            alt='menu'
-            className='w-[28px] h-[28px] object-contain'
+          <button
+            type='button'
+            aria-label={toggle ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={toggle}
+            aria-controls='mobile-navigation'
+            className='green-pink-gradient rounded-full p-[1px] shadow-[0_14px_35px_rgba(0,0,0,0.35)] transition-transform duration-200 active:scale-95'
             onClick={() => setToggle(!toggle)}
-          />
+          >
+            <span className='flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#090325]/90 backdrop-blur-md'>
+              <img
+                src={toggle ? close : menu}
+                alt=''
+                aria-hidden='true'
+                className='h-5 w-5 object-contain'
+              />
+            </span>
+          </button>
 
           <div
+            id='mobile-navigation'
             className={`${
               !toggle ? "hidden" : "flex"
-            } p-6 black-gradient absolute top-20 right-0 mx-4 my-2 min-w-[140px] z-40 rounded-xl`}
+            } absolute right-6 top-20 z-40 w-[min(calc(100vw-3rem),300px)] overflow-hidden rounded-2xl border border-white/10 bg-[#090325]/90 p-[1px] shadow-[0_24px_70px_rgba(0,0,0,0.45)] backdrop-blur-xl`}
           >
-            <ul className='list-none flex justify-end items-start flex-1 flex-col gap-4'>
+            <div className='green-pink-gradient absolute inset-x-0 top-0 h-[2px]' />
+            <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(0,206,168,0.16),transparent_35%),radial-gradient(circle_at_100%_15%,rgba(191,97,255,0.18),transparent_34%)]' />
+            <ul className='relative flex flex-1 list-none flex-col gap-2 p-3'>
               {navLinks.map((nav) => (
                 <li
                   key={nav.id}
-                  className={`font-poppins font-medium cursor-pointer text-[16px] ${
-                    active === nav.title ? "text-white" : "text-secondary"
-                  }`}
+                  className='font-poppins'
                   onClick={() => {
                     setToggle(!toggle);
                     setActive(nav.title);
                   }}
                 >
-                  <a href={`#${nav.id}`}>{nav.title}</a>
+                  <a
+                    href={`#${nav.id}`}
+                    className={`flex items-center justify-center rounded-xl px-4 py-3 text-center text-[15px] font-medium transition-colors duration-200 ${
+                      active === nav.title
+                        ? "bg-white/10 text-white"
+                        : "text-secondary hover:bg-white/[0.06] hover:text-white"
+                    }`}
+                  >
+                    <span>{nav.title}</span>
+                  </a>
                 </li>
               ))}
             </ul>

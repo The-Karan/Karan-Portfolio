@@ -3,12 +3,12 @@ import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 
 import { styles } from "../styles";
-import { karanResume } from "../assets";
 import { services } from "../constants";
 import { SectionWrapper } from "../hoc";
 import { fadeIn, textVariant } from "../utils/motion";
 
 const profileImage = "/karan-profile.jpg";
+const resumeFile = "/Karan_Resume.pdf";
 
 const ServiceCard = ({ index, title, icon }) => (
   <Tilt className='xs:w-[250px] w-full'>
@@ -119,7 +119,7 @@ const About = () => {
           </p>
 
           <a
-            href={karanResume}
+            href={resumeFile}
             download='Karan_Resume.pdf'
             className='group mt-9 inline-flex rounded-xl green-pink-gradient p-[1px] shadow-card transition-transform duration-200 hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70'
           >
